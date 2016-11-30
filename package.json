@@ -1,0 +1,15 @@
+{
+  "name": "latex2img",
+  "version": "0.0.1",
+  "description": "convert laTex to img online",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "samhwang1990@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "MathJax-node": "^0.3.1",
+    "koa": "^1.2.4"
+  }
+}
