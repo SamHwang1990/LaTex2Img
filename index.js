@@ -3,7 +3,8 @@
  */
 
 var koa = require('koa');
-var multer = require('koa-multer');
+var bodyParser = require('koa-bodyparser');
+var send = require('koa-send');
 var app = koa();
 
 var mjApi = require('MathJax-node/lib/mj-single');
@@ -20,15 +21,41 @@ app.use(function* errorCollector(next) {
   }
 });
 
-app.use(multer());
+// parse application/x-www-form-urlencoded
+app.use(bodyParser());
 
-// TODO: xResponseTime 的日志使用logger, 要与下文的请求上下文有对应
+// parse multipart/*, but no need now
+// app.use(multer());
+
 app.use(function* xResponseTime(next) {
   var start = new Date();
   yield next;
   var end = new Date();
   var during = end.getTime() - start.getTime();
-  logger.info(`Handle request ${this.href} with requestvar ${JSON.stringify(this.req.body)} during ${Math.round(100 * during/1000)/100}s`);
+  logger.info(`Handle request ${this.href} with requestvar ${JSON.stringify(this.request.body)} during ${Math.round(100 * during/1000)/100}s`);
+});
+
+// simple static server
+// /vendor => /node_modules
+app.use(function* staticServer(next) {
+  var method = this.method;
+
+  if (method !== 'HEAD' && method !== 'GET') return yield next;
+
+  if (/^\/vendor\//.test(this.path)) {
+    let vendorPath = this.path.replace('/vendor/', '');
+    if (yield send(this, vendorPath, { root: 'node_modules' })) return;
+  }
+  yield next;
+});
+
+// simple router, only handle: /converter
+app.use(function* visitConverterPage(next) {
+  var path = this.request.path;
+  if (this.method === 'GET' && /^\/converter/.test(path)) {
+    if (yield send(this, 'public/converter.html')) return;
+  }
+  yield next;
 });
 
 app.use(function* covertResult(next) {
@@ -39,11 +66,11 @@ app.use(function* covertResult(next) {
 app.use(function* handleGet(next) {
   var mathContent;
   if (this.method === 'POST') {
-    mathContent = this.req.body.content;
+    mathContent = this.request.body.content;
   }
 
   if (!mathContent) {
-    mathContent = decodeURIComponent(this.query.eq);
+    mathContent = this.query.eq ? decodeURIComponent(this.query.eq) : '';
   }
 
   logger.info(`Received math content: ${mathContent}`);

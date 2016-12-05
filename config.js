@@ -5,6 +5,6 @@
 exports.port = 4000;
 
 exports.logInfo = {
-  level: 'DEBUG',     // trace, debug, info, warn, error, fatal
-  dist: 'file'        // stdout, file
+  level: 'trace',     // trace, debug, info, warn, error, fatal
+  dist: 'stdout'        // stdout, file
 };
