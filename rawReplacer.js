@@ -6,6 +6,8 @@ var fs = require('fs');
 var send = require('koa-send');
 var co = require('co');
 
+var config = require('./config');
+
 module.exports = function* RawContentReplacerMiddleware(next) {
   var path = this.request.path;
   if (this.method === 'GET' && /^\/raw-replacer/.test(path)) {
@@ -22,9 +24,17 @@ module.exports = function* RawContentReplacerMiddleware(next) {
         });
       })
     });
-    fileContent.replace(/$$(.*?)$$/g, function(match, content) {
-      console.log(content);
+
+    // block TeX
+    let replaceResult = fileContent.replace(/\$\$([\s\S]*?)\$\$/gu, function(match, content) {
+      return `${config.heroku.host}?eq=${encodeURIComponent(content)}&type=svg`;
     });
+
+    // inline Tex
+    replaceResult = replaceResult.replace(/[^$]\$[^$]([\s\S]*?)[^$]\$[^$]/gu, function(match, content) {
+      return `${config.heroku.host}?eq=${encodeURIComponent(content)}&type=svg`;
+    });
+    this.body = replaceResult;
     return;
   }
   yield next;
