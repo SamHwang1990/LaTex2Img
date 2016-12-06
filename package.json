@@ -4,12 +4,14 @@
   "description": "convert laTex to img online",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "./install.sh"
   },
   "author": "samhwang1990@gmail.com",
   "license": "MIT",
   "dependencies": {
     "MathJax-node": "^0.3.1",
+    "co": "^4.6.0",
     "koa": "^1.2.4",
     "koa-bodyparser": "^2.3.0",
     "koa-multer": "0.0.2",

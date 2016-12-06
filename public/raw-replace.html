@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tex2Img Converter</title>
+    <link href="/vendor/normalize.css/normalize.css" type="text/css" rel="stylesheet"/>
+    <style>
+
+    </style>
+</head>
+<body>
+
+<div class="desc">
+    上传文本文件，并替换其中的TeX 内容块为对应url
+</div>
+
+<div class="main">
+    <form action="./raw-replacer" method="post" enctype="multipart/form-data" >
+        <label></label>
+        <input type="file" name="rawFile"/>
+        <input type="submit" value="Submit"/>
+    </form>
+</div>
+
+</body>
+</html>
