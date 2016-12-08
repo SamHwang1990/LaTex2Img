@@ -26,12 +26,12 @@ module.exports = function* RawContentReplacerMiddleware(next) {
     });
 
     // block TeX
-    let replaceResult = fileContent.replace(/\$\$([\s\S]*?)\$\$/gu, function(match, content) {
-      return `${config.heroku.host}?eq=${encodeURIComponent(content)}&type=svg`;
-    });
+    // let replaceResult = fileContent.replace(/\$\$([\s\S]*?)\$\$/gu, function(match, content) {
+    //   return `${config.heroku.host}?eq=${encodeURIComponent(content)}&type=svg`;
+    // });
 
-    // inline Tex
-    replaceResult = replaceResult.replace(/[^$]\$[^$]([\s\S]*?)[^$]\$[^$]/gu, function(match, content) {
+    // block & inline Tex
+    let replaceResult = fileContent.replace(/\$?\$([^\$]*?)\$\$?/gu, function(match, content) {
       return `${config.heroku.host}?eq=${encodeURIComponent(content)}&type=svg`;
     });
     this.body = replaceResult;
