@@ -25,16 +25,16 @@ module.exports = function* RawContentReplacerMiddleware(next) {
       })
     });
 
-    // block TeX
-    // let replaceResult = fileContent.replace(/\$\$([\s\S]*?)\$\$/gu, function(match, content) {
-    //   return `${config.heroku.host}?eq=${encodeURIComponent(content)}&type=svg`;
-    // });
-
     // block & inline Tex
     let replaceResult = fileContent.replace(/\$?\$([^\$]*?)\$\$?/gu, function(match, content) {
       return `${config.heroku.host}?eq=${encodeURIComponent(content)}&type=svg`;
     });
     this.body = replaceResult;
+
+    // remove file
+    console.log(rawFile.path);
+    fs.unlinkSync(rawFile.path);
+
     return;
   }
   yield next;
