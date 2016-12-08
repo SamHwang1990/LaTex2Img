@@ -53,7 +53,7 @@ function doConvert(content, type) {
   return co(function* () {
     return new Promise((resolve, reject) => {
       mjApi.config({});
-      mjApi.start();
+      // mjApi.start();
 
       mjApi.typeset(initMjData(content, type), function (data) {
         if (data.errors) return reject(data.errors);

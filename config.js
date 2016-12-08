@@ -1,7 +1,7 @@
 /**
  * Created by sam on 16/12/2.
  */
-var port = process.env.PORT || 5000;
+var port = process.env.PORT || 4000;
 
 exports.port = port;
 
